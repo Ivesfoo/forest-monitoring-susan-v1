@@ -1,0 +1,6 @@
+alert_id,latitude,longitude,alert_date,tree_loss_ha,confidence,source
+DEF001,4.6121,102.3121,2026-02-24,12.5,high,GFW
+DEF002,4.7012,102.4012,2026-02-23,8.2,medium,GFW
+DEF003,4.5890,102.2890,2026-02-22,3.5,low,GFW
+DEF004,4.7450,102.4550,2026-02-21,15.8,high,GFW
+DEF005,4.6705,102.3605,2026-02-20,6.1,medium,GFW

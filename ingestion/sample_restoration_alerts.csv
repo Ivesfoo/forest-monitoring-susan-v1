@@ -1,0 +1,6 @@
+alert_id,latitude,longitude,alert_date,restored_ha,confidence,source
+RES001,4.6401,102.3401,2026-02-24,4.5,high,GFW
+RES002,4.6550,102.3550,2026-02-23,2.8,medium,GFW
+RES003,4.6702,102.3702,2026-02-22,1.2,low,GFW
+RES004,4.6855,102.3855,2026-02-21,5.1,high,GFW
+RES005,4.7008,102.4008,2026-02-20,3.3,medium,GFW

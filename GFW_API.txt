@@ -1,0 +1,36 @@
+Getting the Token:
+import requests
+
+url = "https://data-api.globalforestwatch.org/auth/token"
+data = {
+    "username": "foomingwee0716@gmail.com",
+    "password": "Foo@0716"
+}
+
+response = requests.post(url, data=data)
+print("Status code:", response.status_code)
+print("Response:", response.text)
+
+Getting the API key:
+import requests
+
+TOKEN = "PLAVE_THE_TOKEN_HERE"
+
+url = "https://data-api.globalforestwatch.org/auth/apikey"
+
+headers = {
+    "Authorization": f"Bearer {TOKEN}",
+    "Content-Type": "application/json"
+}
+
+data = {
+    "alias": "eph-forest-app",
+    "email": "foomingwee0716@gmail.com",
+    "organization": "Student Project",
+    "domains": []
+}
+
+response = requests.post(url, headers=headers, json=data)
+
+print(response.status_code)
+print(response.text)
