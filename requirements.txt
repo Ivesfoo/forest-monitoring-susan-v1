@@ -5,3 +5,5 @@ pydeck
 folium
 streamlit-folium
 matplotlib
+requests
+shapely
