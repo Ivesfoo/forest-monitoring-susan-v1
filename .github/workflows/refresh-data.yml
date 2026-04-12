@@ -3,7 +3,10 @@ name: Refresh monitoring data
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/30 * * * *"  # every 30 minutes
+    - cron: "*/30 * * * *"
+
+permissions:
+  contents: write
 
 jobs:
   refresh:
