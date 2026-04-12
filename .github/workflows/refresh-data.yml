@@ -24,6 +24,8 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run data refresh
+        env:
+          GFW_API_KEY: ${{ secrets.GFW_API_KEY }}
         run: |
           python refresh_v1_data.py
 
