@@ -13,8 +13,7 @@ from components.filters import render_alert_filters
 from components.alert_map import render_alert_map
 from components.summary_panel import render_alert_summary_panel
 from components.trend_chart import render_alert_trend_chart
-from components.status_update_form import render_status_update_form
-
+from components.status_update import render_status_update_form
 from services.trend_service import prepare_daily_alert_trend
 
 
