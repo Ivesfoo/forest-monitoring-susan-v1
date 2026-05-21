@@ -9,7 +9,7 @@ cursor = conn.cursor()
 # ----------------------------------
 sites = [
     {
-        "name": "SUSAN MONITORING AREA",
+        "name": "AMKK",
         "coords": [
             [101.9094243, 4.6954786],
             [101.9096867, 4.6962073],
