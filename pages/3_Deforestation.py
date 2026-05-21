@@ -112,7 +112,7 @@ if not filtered_defor_df.empty:
 # -----------------------------
 st.markdown("## Alert Overview")
 
-if filtered_defor_df.empty:
+if filtered_fire_df.empty:
     zero_kpis = {
         "total": 0,
         "high": 0,
@@ -121,40 +121,42 @@ if filtered_defor_df.empty:
     }
     render_alert_kpis(zero_kpis)
 
-    st.info("No deforestation alerts found for the selected site(s) and filters.")
+    st.info("No fire alerts found for the selected site(s) and filters.")
 
-    st.markdown("## Site Activity Map")
-    if filtered_activity_df.empty:
-        st.warning("No recent monitoring activity found for the selected site(s).")
+    st.markdown("## Selected Monitoring Sites")
+    site_map_df = build_site_centroid_df(selected_sites)
+
+    if site_map_df.empty:
+        st.warning("No monitoring sites available to display.")
     else:
-        render_alert_map(
-            filtered_activity_df,
-            title="Recent Monitoring Activity Locations"
-        )
+        render_alert_map(site_map_df)
+
+    st.markdown("## Fire Alert Records")
+    st.info("No fire alert records available for the selected site(s) and filters.")
 
 else:
     kpis = {
-        "total": len(filtered_defor_df),
-        "high": int((filtered_defor_df["severity"] == "High").sum()),
-        "medium": int((filtered_defor_df["severity"] == "Medium").sum()),
-        "low": int((filtered_defor_df["severity"] == "Low").sum()),
+        "total": len(filtered_fire_df),
+        "high": int((filtered_fire_df["severity"] == "High").sum()),
+        "medium": int((filtered_fire_df["severity"] == "Medium").sum()),
+        "low": int((filtered_fire_df["severity"] == "Low").sum()),
     }
     render_alert_kpis(kpis)
+
+    st.markdown("## Alert Trend")
+    trend_df = prepare_daily_alert_trend(filtered_fire_df)
+    render_alert_trend_chart(trend_df, title="Fire Alerts by Date")
 
     map_col, summary_col = st.columns([3, 1.2], gap="large")
 
     with map_col:
-        render_alert_map(filtered_defor_df, title="Deforestation Alert Locations")
+        render_alert_map(filtered_fire_df, title="Fire Alert Locations")
 
     with summary_col:
-        render_alert_summary_panel(filtered_defor_df, panel_title="Quick Summary")
+        render_alert_summary_panel(filtered_fire_df, panel_title="Quick Summary")
+        st.markdown("---")
+        fire_alert_ids = sorted(filtered_fire_df["alert_id"].dropna().unique().tolist())
+        render_status_update_form(fire_alert_ids)
 
-# -----------------------------
-# Always show latest overall activity
-# -----------------------------
-st.markdown("## Latest Monitoring Activity")
-render_alert_table(
-    filtered_activity_df,
-    title="Latest Monitoring Activity",
-    show_title=False,
-)
+    st.markdown("## Fire Alert Records")
+    render_alert_table(filtered_fire_df, title="Fire Alerts Data", show_title=False)
