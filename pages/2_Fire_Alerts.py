@@ -104,7 +104,7 @@ if filtered_fire_df.empty:
     if site_map_df.empty:
         st.warning("No monitoring sites available to display.")
     else:
-        render_alert_map(site_map_df, title="Selected Monitoring Sites")
+        render_alert_map(site_map_df)
 
     st.markdown("## Fire Alert Records")
     st.info("No fire alert records available for the selected site(s) and filters.")
