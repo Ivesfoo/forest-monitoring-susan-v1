@@ -101,6 +101,25 @@ filtered_df = apply_alert_filters(
 
 if filtered_df.empty:
     st.warning("No alerts match the selected filters.")
+
+    # Show empty KPI cards
+    zero_kpis = {
+        "total": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "active_sites": len(selected_sites)
+    }
+
+    render_alert_kpis(zero_kpis)
+
+    #Still show monitoring area map
+    st.markdown("## 🗺️ Monitoring Area")
+
+    render_alert_map(
+        df,
+        title="Monitoring Site Locations"
+    )
     st.stop()
 
 
