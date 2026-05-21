@@ -31,7 +31,6 @@ st.markdown(
     - **{t("overview")}**
     - **{t("fire_alerts")}**
     - **{t("deforestation")}**
-    - **{t("restoration")}**
     """
 )
 
