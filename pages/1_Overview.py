@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from shapely.geometry import shape
 
 from utils.page_style import apply_page_style
 
@@ -15,6 +16,10 @@ from services.filter_service import apply_alert_filters
 
 from services.trend_service import (
     prepare_alert_type_trend,
+)
+
+from services.area_service import (
+    get_active_monitored_areas
 )
 
 from components.metric_cards import render_alert_kpis
@@ -40,14 +45,11 @@ st.set_page_config(
 
 apply_page_style()
 
-from shapely.geometry import shape
 
-
+# =========================================================
+# HELPER FUNCTION
+# =========================================================
 def build_site_centroid_df(selected_sites):
-
-    from services.area_service import (
-        get_active_monitored_areas
-    )
 
     areas = get_active_monitored_areas()
 
@@ -84,6 +86,7 @@ def build_site_centroid_df(selected_sites):
 st.markdown(
     """
     <h1 style='margin-bottom:0;'>🌍 Forest Monitoring Dashboard</h1>
+
     <p style='color:#9ca3af; margin-top:0; font-size:16px;'>
         Real-time environmental monitoring and alert intelligence system
     </p>
@@ -100,22 +103,20 @@ render_data_status()
 df = load_all_alerts()
 
 if df.empty:
+
     st.warning("✅ No alerts found in the monitoring system.")
 
-    # Create empty dataframe structure
-    import pandas as pd
-
     df = pd.DataFrame(columns=[
-            "alert_id",
-            "alert_type",
-            "alert_date",
-            "severity",
-            "status",
-            "latitude",
-            "longtitude",
-            "confidence",
-            "source",
-            "location_name",
+        "alert_id",
+        "alert_type",
+        "alert_date",
+        "severity",
+        "status",
+        "latitude",
+        "longitude",
+        "confidence",
+        "source",
+        "location_name",
     ])
 
 
@@ -151,10 +152,14 @@ filtered_df = apply_alert_filters(
     site_filter=selected_sites,
 )
 
+
+# =========================================================
+# EMPTY ALERT CASE
+# =========================================================
 if filtered_df.empty:
+
     st.warning("No alerts match the selected filters.")
 
-    # Show empty KPI cards
     zero_kpis = {
         "total": 0,
         "high": 0,
@@ -165,13 +170,23 @@ if filtered_df.empty:
 
     render_alert_kpis(zero_kpis)
 
-    #Still show monitoring area map
     st.markdown("## 🗺️ Monitoring Area")
 
-    render_alert_map(
-        df,
-        title="Monitoring Site Locations"
+    site_map_df = build_site_centroid_df(
+        selected_sites
     )
+
+    if site_map_df.empty:
+
+        st.info("No monitoring area available.")
+
+    else:
+
+        render_alert_map(
+            site_map_df,
+            title="Monitoring Site Locations"
+        )
+
     st.stop()
 
 
@@ -203,23 +218,10 @@ map_col, summary_col = st.columns(
 
 with map_col:
 
-    if filtered_df.empty:
-
-        site_map_df = build_site_centroid_df(
-            selected_sites
-        )
-
     render_alert_map(
         filtered_df,
         title="Monitoring Alert Locations"
     )
-
-    else:
-
-        render_alert_map(
-            filtered_df,
-            title = "Monitoring Alert Locations"
-        )
 
 with summary_col:
 
