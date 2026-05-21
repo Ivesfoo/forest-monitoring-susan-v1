@@ -92,7 +92,7 @@ def render_alert_map(
 
     m = folium.Map(
         location=[center_lat, center_lon],
-        zoom_start=10,
+        zoom_start=16,
         max_zoom=22,
         detect_retina=True,
         control_scale=True,
@@ -100,7 +100,7 @@ def render_alert_map(
     )
 
     folium.TileLayer(
-        tiles="https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+        tiles="https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
         attr="Google",
         name="Google Satellite",
         overlay=False,
