@@ -40,6 +40,43 @@ st.set_page_config(
 
 apply_page_style()
 
+from shapely.geometry import shape
+
+
+def build_site_centroid_df(selected_sites):
+
+    from services.area_service import (
+        get_active_monitored_areas
+    )
+
+    areas = get_active_monitored_areas()
+
+    rows = []
+
+    for area in areas:
+
+        if area["area_name"] not in selected_sites:
+            continue
+
+        geom = area["geojson"]["features"][0]["geometry"]
+
+        centroid = shape(geom).centroid
+
+        rows.append({
+            "alert_id": f"SITE_{area['area_name']}",
+            "alert_type": "monitoring_site",
+            "alert_date": None,
+            "severity": "Low",
+            "status": "active",
+            "latitude": centroid.y,
+            "longitude": centroid.x,
+            "confidence": "",
+            "source": "Monitoring Site",
+            "location_name": area["area_name"],
+        })
+
+    return pd.DataFrame(rows)
+
 
 # =========================================================
 # PAGE HEADER
@@ -63,8 +100,23 @@ render_data_status()
 df = load_all_alerts()
 
 if df.empty:
-    st.warning("No alerts found in the monitoring system.")
-    st.stop()
+    st.warning("✅ No alerts found in the monitoring system.")
+
+    # Create empty dataframe structure
+    import pandas as pd
+
+    df = pd.DataFrame(columns=[
+            "alert_id",
+            "alert_type",
+            "alert_date",
+            "severity",
+            "status",
+            "latitude",
+            "longtitude",
+            "confidence",
+            "source",
+            "location_name",
+    ])
 
 
 # =========================================================
@@ -151,10 +203,23 @@ map_col, summary_col = st.columns(
 
 with map_col:
 
+    if filtered_df.empty:
+
+        site_map_df = build_site_centroid_df(
+            selected_sites
+        )
+
     render_alert_map(
         filtered_df,
         title="Monitoring Alert Locations"
     )
+
+    else:
+
+        render_alert_map(
+            filtered_df,
+            title = "Monitoring Alert Locations"
+        )
 
 with summary_col:
 
